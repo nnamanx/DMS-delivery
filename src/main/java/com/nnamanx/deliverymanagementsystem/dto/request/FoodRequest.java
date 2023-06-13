@@ -4,8 +4,6 @@ import com.nnamanx.deliverymanagementsystem.model.entity.Category;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.ManyToOne;
-
 @Data
 @Builder
 @NoArgsConstructor

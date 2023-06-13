@@ -1,26 +1,55 @@
 package com.nnamanx.deliverymanagementsystem.service.Impl;
 
+import com.nnamanx.deliverymanagementsystem.dto.request.UserRequest;
+import com.nnamanx.deliverymanagementsystem.dto.response.ResponseDto;
+import com.nnamanx.deliverymanagementsystem.dto.response.UserResponse;
 import com.nnamanx.deliverymanagementsystem.enums.ResponseMessage;
+import com.nnamanx.deliverymanagementsystem.exception.UserNotFoundException;
 import com.nnamanx.deliverymanagementsystem.model.entity.MyUser;
 import com.nnamanx.deliverymanagementsystem.repository.UserDao;
 import com.nnamanx.deliverymanagementsystem.service.UserService;
 import com.nnamanx.deliverymanagementsystem.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.catalina.User;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    UserDao userDao;
+    private final UserDao userDao;
+    private final ModelMapper modelMapper;
+
+
+    @Override
+    public List<UserResponse> findAllUsers() {
+        return (List<UserResponse>) userDao.findAll().stream()
+                .map(product -> modelMapper.map(product, UserResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserResponse findUserById(Long id) throws Throwable {
+        return modelMapper.map(userDao.findById(id)
+                .orElseThrow(UserNotFoundException::new), UserResponse.class);
+    }
+
+    @Override
+    public ResponseEntity<ResponseDto> updateUser(UserRequest userRequest) {
+        userDao.save(modelMapper.map(userRequest, User.class));
+        return ResponseEntity.ok(new ResponseDto(ResponseMessage.UPDATE_SUCCESSFULLY.name()));
+    }
+
 
     @Override
     public ResponseEntity<String> signUp(Map<String, String> requestMap) {
@@ -39,7 +68,7 @@ public class UserServiceImpl implements UserService {
             } else {
                 return Utils.getResponseEntity(String.valueOf(ResponseMessage.INVALID_DATA), HttpStatus.BAD_REQUEST);
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Utils.getResponseEntity(ResponseMessage.SOMETHING_WENT_WRONG.name(), HttpStatus.INTERNAL_SERVER_ERROR);

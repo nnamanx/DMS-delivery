@@ -5,7 +5,6 @@ import com.nnamanx.deliverymanagementsystem.model.entity.Order;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.OneToOne;
 
 @Data
 @Builder

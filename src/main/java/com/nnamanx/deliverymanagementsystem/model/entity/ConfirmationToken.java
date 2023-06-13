@@ -18,9 +18,7 @@ public class ConfirmationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
     String token;
-
     @CreationTimestamp
     LocalDateTime createdAt;
     LocalDateTime confirmedAt;

@@ -3,9 +3,7 @@ package com.nnamanx.deliverymanagementsystem.dto.request;
 import com.nnamanx.deliverymanagementsystem.model.entity.MyUser;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 
 @Data

@@ -4,7 +4,6 @@ import com.nnamanx.deliverymanagementsystem.model.entity.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 
 @Data

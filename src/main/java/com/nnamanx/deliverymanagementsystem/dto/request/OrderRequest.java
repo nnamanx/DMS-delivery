@@ -5,8 +5,6 @@ import com.nnamanx.deliverymanagementsystem.model.entity.Driver;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.OneToOne;
-
 @Data
 @Builder
 @NoArgsConstructor
