@@ -1,14 +1,31 @@
 package com.nnamanx.deliverymanagementsystem.service.Impl;
 
+import com.nnamanx.deliverymanagementsystem.model.Email;
 import com.nnamanx.deliverymanagementsystem.service.EmailService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
-    private final ModelMapper modelMapper;
+    private final JavaMailSender javaMailSender;
+
+    public void sendMail(Email email) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+
+        simpleMailMessage.setTo(email.getTo());
+        simpleMailMessage.setSubject(email.getSubject());
+        simpleMailMessage.setTo(email.getBody());
+
+        javaMailSender.send(simpleMailMessage);
+
+        log.info("Mail sent to " + email);
+
+    }
 
 
 }
