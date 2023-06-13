@@ -5,8 +5,10 @@ import com.nnamanx.deliverymanagementsystem.dto.response.ResponseDto;
 import com.nnamanx.deliverymanagementsystem.dto.response.UserResponse;
 import com.nnamanx.deliverymanagementsystem.enums.ResponseMessage;
 import com.nnamanx.deliverymanagementsystem.exception.UserNotFoundException;
+import com.nnamanx.deliverymanagementsystem.model.Email;
 import com.nnamanx.deliverymanagementsystem.model.entity.MyUser;
 import com.nnamanx.deliverymanagementsystem.repository.UserDao;
+import com.nnamanx.deliverymanagementsystem.service.EmailService;
 import com.nnamanx.deliverymanagementsystem.service.UserService;
 import com.nnamanx.deliverymanagementsystem.utils.Utils;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
+    private final EmailService emailService;
     private final ModelMapper modelMapper;
 
 
@@ -52,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ResponseEntity<String> signUp(Map<String, String> requestMap) {
+    public ResponseEntity<String> signUp(Map<Email, Email> requestMap) {
         log.info("Inside signup {}", requestMap);
 
 
@@ -74,21 +77,54 @@ public class UserServiceImpl implements UserService {
         return Utils.getResponseEntity(ResponseMessage.SOMETHING_WENT_WRONG.name(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private boolean ValidateSignUpMap(Map<String, String> requestMap) {
+    @Override
+    public void sendPasswordResetEmail(Email email) {
+        MyUser user = userDao.findByEmail(email);
+        if (user != null) {
+
+            // Generate password reset token and save it in the user entity
+
+            String resetToken = generateResetToken();
+            user.setResetToken(resetToken);
+            userDao.save(user);
+
+            // Sending password reset email
+            String resetLink = generateResetLink(resetToken);
+
+            email.setSubject("Password reset");
+            email.setBody("Please click the link below to reset your password:\n" + resetLink);
+            emailService.sendMail(email);
+        }
+    }
+
+    private String generateResetToken() {
+        // Generate and return a unique password reset token
+        return null;
+    }
+
+    private String generateResetLink(String resetToken) {
+        // Generate and return the password reset link based on the resetToken
+        return null;
+    }
+
+
+    private boolean ValidateSignUpMap(Map<Email, Email> requestMap) {
         if (requestMap.containsKey("name") && requestMap.containsKey("phoneNumber")
                 && requestMap.containsKey("email") && requestMap.containsKey("password")) {
             return true;
         } else return false;
     }
 
-    private MyUser getUserFromMap(Map<String, String> requestMap) {
+    private MyUser getUserFromMap(Map<Email, Email> requestMap) {
         MyUser user = new MyUser();
-        user.setName(requestMap.get("name"));
-        user.setPhoneNumber(requestMap.get("phoneNumber"));
-        user.setEmail(requestMap.get("email"));
-        user.setPassword(requestMap.get("password"));
+        user.setName(String.valueOf(requestMap.get("name")));
+        user.setPhoneNumber(String.valueOf(requestMap.get("phoneNumber")));
+        user.setEmail(String.valueOf(requestMap.get("email")));
+        user.setPassword(String.valueOf(requestMap.get("password")));
         user.setStatus("false");
         user.setRole("false");
         return user;
     }
+
+
 }

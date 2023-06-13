@@ -7,9 +7,12 @@ import com.nnamanx.deliverymanagementsystem.enums.ResponseMessage;
 import com.nnamanx.deliverymanagementsystem.exception.PasswordTokenNotFoundException;
 import com.nnamanx.deliverymanagementsystem.model.entity.ForgetPasswordToken;
 import com.nnamanx.deliverymanagementsystem.repository.ForgetPasswordDao;
+import com.nnamanx.deliverymanagementsystem.repository.UserDao;
+import com.nnamanx.deliverymanagementsystem.service.EmailService;
 import com.nnamanx.deliverymanagementsystem.service.ForgetPasswordService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +25,11 @@ public class ForgetPasswordServiceImpl implements ForgetPasswordService {
     private final ForgetPasswordDao forgetPasswordDao;
     private final ModelMapper modelMapper;
 
-    @Override
-    public List<ForgetPasswordResponse> findAllPasswordTokens() {
-        return forgetPasswordDao.findAll().stream()
-                .map(passwordToken -> modelMapper.map(passwordToken, ForgetPasswordResponse.class))
-                .collect(Collectors.toList());
-    }
+    private final UserDao userDao;
+    private final EmailService emailService;
+
+
+    //    CRUD
 
     @Override
     public ResponseEntity<ResponseDto> register(ForgetPasswordRequest forgetPasswordRequest) {
@@ -35,16 +37,15 @@ public class ForgetPasswordServiceImpl implements ForgetPasswordService {
         return ResponseEntity.ok(new ResponseDto(ResponseMessage.REGISTERED_SUCCESSFULLY.name()));
     }
 
-    @Override
-    public ForgetPasswordResponse findPasswordTokenById(Long id) {
-        return modelMapper.map(forgetPasswordDao.findById(id)
-                .orElseThrow(PasswordTokenNotFoundException::new), ForgetPasswordResponse.class);
+
+    //    SENDING RESET MAIL
+    @Autowired
+    public ForgetPasswordServiceImpl(ForgetPasswordDao forgetPasswordDao, UserDao userDao, EmailService emailService) {
+        this.forgetPasswordDao = forgetPasswordDao;
+        this.userDao = userDao;
+        this.emailService = emailService;
+        modelMapper = null;
     }
 
-    @Override
-    public ResponseEntity<ResponseDto> updateForgetPassword(ForgetPasswordRequest forgetPasswordRequest) {
-        forgetPasswordDao.save(modelMapper.map(forgetPasswordDao, ForgetPasswordToken.class));
-        return ResponseEntity.ok(new ResponseDto(ResponseMessage.UPDATE_SUCCESSFULLY.name()));
-    }
 
 }

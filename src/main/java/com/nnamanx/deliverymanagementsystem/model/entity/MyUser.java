@@ -24,6 +24,7 @@ public class MyUser {
     LocalDate birthdate;
     String email;
     String password;
+    String resetToken;
     String phoneNumber;
     Boolean isEnabled;
     String role; //vid

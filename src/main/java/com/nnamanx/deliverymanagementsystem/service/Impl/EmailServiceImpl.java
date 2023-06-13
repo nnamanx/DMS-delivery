@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
 
+    @Override
     public void sendMail(Email email) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
@@ -26,6 +27,5 @@ public class EmailServiceImpl implements EmailService {
         log.info("Mail sent to " + email);
 
     }
-
 
 }
