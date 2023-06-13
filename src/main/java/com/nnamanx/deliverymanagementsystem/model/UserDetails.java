@@ -7,7 +7,6 @@ public class UserDetails extends MyUser {
         super.setName(myUser.getName());
         super.setSurname(myUser.getSurname());
         super.setStatus(myUser.getStatus());
-        super.setRole(myUser.getRole());
 
     }
 
