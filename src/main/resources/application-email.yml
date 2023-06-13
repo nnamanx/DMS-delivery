@@ -1,0 +1,12 @@
+spring:
+  mail:
+    host: "smtp.gmail.com"
+    port: 587
+    username: "lkhudadatzada12131@ada.edu.az"
+    password: "xxx"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
