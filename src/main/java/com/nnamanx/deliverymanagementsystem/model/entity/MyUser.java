@@ -27,8 +27,7 @@ public class MyUser {
     String resetToken;
     String phoneNumber;
     Boolean isEnabled;
-    String role; //vid
-    String status; //vid
+    String status;
 
     @ManyToOne
     Role userRole;
