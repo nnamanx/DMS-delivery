@@ -20,13 +20,13 @@ public class Cart {
     int count;
     double totalAmount;
 
-    @OneToMany
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.PERSIST)
     List<Food> food;
 
     @OneToOne
     Cart cart;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     MyUser myUser;
 
 
