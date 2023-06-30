@@ -22,8 +22,7 @@ import java.util.Map;
 @Slf4j
 public class UserControllerImpl implements UserController {
 
-
-    UserService userService;
+    private final UserService userService;
 
     @Override
     public ResponseEntity<String> signUp(Map<Email, Email> requestMap) {

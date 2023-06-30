@@ -31,6 +31,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+// feedback
+    //and first pull request
+
     public ResponseEntity<ResponseDto> register(RoleRequest roleRequest) {
         roleDao.save(modelMapper.map(roleRequest, Role.class));
         return ResponseEntity.ok(new ResponseDto(ResponseMessage.REGISTERED_SUCCESSFULLY.name()));
